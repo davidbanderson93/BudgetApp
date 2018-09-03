@@ -13,7 +13,7 @@ def prepCSV(csvPath):
 	newPath = os.path.join(srcPath, 'statement_%s.csv' % ts)
 	f = open(newPath, 'a')
 	for i, line in enumerate(lines):
-		if i < 3:
+		if i < 4:
 			continue
 		f.write(line)
 	f.close()
@@ -23,7 +23,7 @@ def prepCSV(csvPath):
 def readCSV(csvPath):
 	content = []
 	with open(csvPath) as csvFile:
-		reader = csv.DictReader(csvFile)
+		reader = csv.reader(csvFile, delimiter=',')
 		for row in reader:
 			content.append(row)
 	return content
