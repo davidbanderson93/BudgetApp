@@ -63,3 +63,22 @@ class Database(object):
 
 		sql_cmd = 'INSERT INTO %s(%s) VALUES(%s)' % (table_name, field_names, place_holders)
 		self.execute_sql(sql_cmd, arg=value_data)
+
+	#	table_name: string
+	#	field_data: {'field_name': 'field_value',...}
+	# 	profile_id: integer
+	def update_data(self, table_name, field_data, profile_id):
+		value_data = ''
+		for name, value in field_data.items():
+			value_data += name + '=' + '?,'
+		value_data = value_data[:-1]
+	
+		sql_cmd = 'UPDATE %s SET %s WHERE profile_id = %d' % (table_name, value_data, profile_id)
+		self.execute_sql(sql_cmd, arg=value_data)
+		
+	#	table_name: string
+	#	profile_id: integer
+	def delete_data(self, table_name, profile_id):
+		sql_cmd = 'DELETE FROM %s WHERE profile_id=%d' % (table_name, profile_id)
+		self.execute_sql(sql_cmd)
+		
