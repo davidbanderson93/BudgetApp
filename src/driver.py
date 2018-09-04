@@ -8,5 +8,7 @@ if __name__ == '__main__':
 	#prepPath = CSVUtils.prepCSV(args[0])
 	statement_data = CSVUtils.readCSV(args[0])
 	budget_db = Database('..\databases\Budget.db')
-	load_statement_info(budget_db, statement_data)
-	#budget_db.close_connection()
+	
+	initialize_database(budget_db)
+	load_statement_info(budget_db, statement_data, 1)
+	budget_db.close_connection()
