@@ -1,0 +1,47 @@
+profile fields:
+	id					integer PRIMARY KEY
+	name				text
+	paycheck			real
+	
+spending fields:
+	transaction_number	integer
+	date				text
+	description			text
+	memo				text
+	debit				real
+	credit				real
+	balance				real
+	check_number		integer
+	fees				real
+	profile_id			integer
+	category			text
+	
+goals fields:
+	title				text
+	description			text
+	cost				real
+	achieve_by			text
+	achieved			integer
+	profile_id			integer
+	
+bills
+	title				text
+	description			text
+	payment				real
+	company				text
+	due_date			text
+	profile_id			integer
+	
+debts
+	title				text
+	description			text
+	total_debt			real
+	interest_rate		real
+	profile_id			integer
+	due_date			text
+	payment				real
+	achieve_by			text
+	achieved			integer
+	
+	
+	

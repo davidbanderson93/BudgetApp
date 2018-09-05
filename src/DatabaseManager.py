@@ -75,7 +75,17 @@ class Database(object):
 	
 		sql_cmd = 'UPDATE %s SET %s WHERE profile_id = %d' % (table_name, value_data, profile_id)
 		self.execute_sql(sql_cmd, arg=value_data)
-		
+	
+	#	table_name: string
+	#	field_name: variable name to sort selection
+	#	field_value: value to select by
+	def select_data(self, table_name, field_name, field_value):
+		sql_cmd = 'SELECT * FROM %s WHERE %s=?' % (table_name, field_name)
+		cur = self.conn.cursor()
+		cur.execut(sql_cmd, (field_value,))
+		rows = cur.fetchall()
+		return rows
+	
 	#	table_name: string
 	#	profile_id: integer
 	def delete_data(self, table_name, profile_id):

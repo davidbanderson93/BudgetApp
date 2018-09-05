@@ -13,17 +13,21 @@ def prepCSV(csvPath):
 	newPath = os.path.join(srcPath, 'statement_%s.csv' % ts)
 	f = open(newPath, 'a')
 	for i, line in enumerate(lines):
-		if i < 4:
+		if i < 4:	# skip the first 4 lines
 			continue
 		f.write(line)
 	f.close()
-	os.remove(csvPath)
+	os.remove(csvPath)	# remove original file to make room for next exported statement
 	return prepPath
 
-def readCSV(csvPath):
+def readCSV(csvPath, dict_output=False):
 	content = []
 	with open(csvPath) as csvFile:
-		reader = csv.reader(csvFile, delimiter=',')
+		if dict_output:							# dict reader outputs a key,value pair for each row
+												# based on first row as keys
+			reader = csv.DictReader(csvFile)
+		else:
+			reader = csv.reader(csvFile, delimiter=',')
 		for row in reader:
 			content.append(row)
 	return content
