@@ -8,8 +8,8 @@ from DataProcessor import *
 # create databases if they do not already exist
 def initialize_database(budget_db):
 	# create profile table
-	field_names = {'id': 'integer PRIMARY KEY', 'name': 'text', 'paycheck': 'real'}
-	budget_db.create_table('profile', field_names)
+	profiles_field_names = {'id': 'integer PRIMARY KEY', 'first_name': 'text', 'last_name': 'text', 'paycheck': 'real', 'nickname': 'text'}
+	budget_db.create_table('profiles', profiles_field_names)
 	
 	# create spending table
 	spending_field_names = {'transaction_number': 'integer', 'date': 'text', 'description': 'text', 'memo': 'text',
@@ -32,7 +32,7 @@ def initialize_database(budget_db):
 					'interest_rate': 'real', 'profile_id': 'integer', 'due_date': 'integer',
 					'payment': 'real', 'achieve_by': 'text', 'achieved': 'integer'}
 	budget_db.create_table('debts', debts_field_names)
-	return [goals_field_names, bills_field_names, debts_field_names]
+	return [goals_field_names, bills_field_names, debts_field_names, profiles_field_names]
 	
 # cleans up the sql specific types for use in the UserInterface
 def clean_field_names(field_names):
@@ -76,6 +76,10 @@ if __name__ == '__main__':
 		elif 'debt' in args:
 			table_name = 'debts'
 			data = Debt(cln_field_names[2]).get_data()
+		elif 'profile' in args:
+			table_name = 'profiles'
+			data = Profile(cln_field_names[3]).get_data()
+			
 		if 'new' in args:
 			budget_db.insert_data(table_name, data)
 		elif 'update' in args:

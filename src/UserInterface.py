@@ -6,13 +6,37 @@ class UserInput(object):
 	profile_id = ''
 	title = ''
 	description = ''
-	data = {}
 	
 	def __init__(self):
+		self.data = {}
 		self.profile_id  = raw_input('Profile ID: ')
 		self.title       = raw_input('Title: ')
 		self.description = raw_input('Description: ')
 		
+	def get_data(self):
+		return self.data
+	
+class Profile:
+	id = 0
+	first_name = ''
+	last_name = ''
+	paycheck = 0.
+	nickname = ''
+
+	def __init__(self, profiles_field_names):
+		self.first_name = raw_input('First Name: ')
+		self.last_name = raw_input('Last Name: ')
+		self.nickname = raw_input('Nickname: ')
+		self.paycheck = raw_input('Paycheck Amount: ')
+		
+		profiles_field_names['id'] = self.id	# check routine needs to get next available id
+		profiles_field_names['first_name'] = self.first_name
+		profiles_field_names['last_name'] = self.last_name
+		profiles_field_names['nickname'] = self.nickname
+		profiles_field_names['paycheck'] = self.paycheck
+		
+		self.data = profiles_field_names
+	
 	def get_data(self):
 		return self.data
 	
