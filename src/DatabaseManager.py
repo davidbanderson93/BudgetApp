@@ -40,7 +40,6 @@ class Database(object):
 		field_string = field_string[:-1]	# remove trailing comma
 	
 		sql_cmd = 'CREATE TABLE IF NOT EXISTS %s (%s);' % (table_name, field_string)
-		print sql_cmd
 		self.execute_sql(sql_cmd)
 	
 	#	table_name: string
@@ -66,22 +65,26 @@ class Database(object):
 	#	table_name: string
 	#	field_data: {'field_name': 'field_value',...}
 	# 	profile_id: integer
-	def update_data(self, table_name, field_data, profile_id):
-		value_data = ''
+	def update_data(self, table_name, field_data, key, title_value):
+		place_holders = ''
+		value_data = ()
 		for name, value in field_data.items():
-			value_data += name + '=' + '?,'
-		value_data = value_data[:-1]
-	
-		sql_cmd = 'UPDATE %s SET %s WHERE profile_id = %d' % (table_name, value_data, profile_id)
-		self.execute_sql(sql_cmd, arg=value_data)
+			if value == '':
+				continue	# do not udate data that was not entered by the user
+			place_holders += name + '=' + "'%s'" % value + ','
+			value_data = value_data + (value,)
+		place_holders = place_holders[:-1]
+		
+		sql_cmd = "UPDATE %s SET %s WHERE %s='%s'" % (table_name, place_holders, key, title_value)
+		self.execute_sql(sql_cmd)
 	
 	#	table_name: string
 	#	field_name: variable name to sort selection
 	#	field_value: value to select by
-	def select_data(self, table_name, field_name, field_value):
-		sql_cmd = 'SELECT * FROM %s WHERE %s=?' % (table_name, field_name)
+	def select_data(self, table_name, col_name, field_value):
+		sql_cmd = 'SELECT * FROM %s WHERE %s=?' % (table_name, col_name)
 		cur = self.conn.cursor()
-		cur.execut(sql_cmd, (field_value,))
+		cur.execute(sql_cmd, (field_value,))
 		rows = cur.fetchall()
 		return rows
 	
@@ -90,4 +93,3 @@ class Database(object):
 	def delete_data(self, table_name, profile_id):
 		sql_cmd = 'DELETE FROM %s WHERE profile_id=%d' % (table_name, profile_id)
 		self.execute_sql(sql_cmd)
-		

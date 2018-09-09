@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import sys
 import CSVUtils
 from UserInterface import *
@@ -63,7 +64,7 @@ if __name__ == '__main__':
 	#load_statement_data(budget_db, statement_data, 1, categories)	# load most recent statement data
 	
 	# look for user input
-	if 'new' in args:
+	if 'new' in args or 'update' in args:
 		if   'goal' in args:
 			table_name = 'goals'
 			data = Goal(cln_field_names[0]).get_data()
@@ -73,5 +74,9 @@ if __name__ == '__main__':
 		elif 'debt' in args:
 			table_name = 'debts'
 			data = Debt(cln_field_names[2]).get_data()
-	budget_db.insert_data(table_name, data)
+		if 'new' in args:
+			budget_db.insert_data(table_name, data)
+		elif 'update' in args:
+			budget_db.update_data(table_name, data, 'title', args[2])	# arg[2] is the title field of desired data
+	
 	budget_db.close_connection()
