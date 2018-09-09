@@ -1,6 +1,8 @@
-profile fields:
-	id					integer PRIMARY KEY
-	name				text
+profiles fields:
+	id				integer PRIMARY KEY
+	first_name			text
+	last_name			text
+	nickname			text
 	paycheck			real
 	
 spending fields:
