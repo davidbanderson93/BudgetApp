@@ -49,6 +49,8 @@ def clean_field_names(field_names):
 if __name__ == '__main__':
 	args = sys.argv[1:]
 	
+	print "usage: <cmd (new/update)> <table name> <goal/bill/debt title to update>"
+	
 	#prepPath = CSVUtils.prepCSV(args[0])		# this is for actual exported formats from VWCU
 	#statement_data = CSVUtils.readCSV(args[0])	# eventually this will be automated to extract from
 												# the 'statements' directory
