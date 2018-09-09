@@ -79,12 +79,12 @@ class Database(object):
 		self.execute_sql(sql_cmd)
 	
 	#	table_name: string
-	#	field_name: variable name to sort selection
-	#	field_value: value to select by
-	def select_data(self, table_name, col_name, field_value):
+	#	col_name: variable name to sort selection
+	#	col_value: value to select by
+	def select_data(self, table_name, col_name, col_value):
 		sql_cmd = 'SELECT * FROM %s WHERE %s=?' % (table_name, col_name)
 		cur = self.conn.cursor()
-		cur.execute(sql_cmd, (field_value,))
+		cur.execute(sql_cmd, (col_value,))
 		rows = cur.fetchall()
 		return rows
 	
@@ -93,3 +93,12 @@ class Database(object):
 	def delete_data(self, table_name, profile_id):
 		sql_cmd = 'DELETE FROM %s WHERE profile_id=%d' % (table_name, profile_id)
 		self.execute_sql(sql_cmd)
+	
+	#	table_name: string
+	#	col_name: which column to check
+	#	col_value: which value to check
+	def check_data(self, table_name, col_name, col_value):
+		rows = self.select_data(table_name, col_name, col_value)
+		if not rows:
+			return False
+		return True

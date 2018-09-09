@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import sys
 import CSVUtils
-from UserInterface import *
+import UserInterface as ui
 from DatabaseManager import Database
 from DataProcessor import *
 
@@ -65,20 +65,25 @@ if __name__ == '__main__':
 	cln_field_names = clean_field_names(field_names)	# clean dictionaries but retain keys
 	#load_statement_data(budget_db, statement_data, 1, categories)	# load most recent statement data
 	
-	# look for user input
+	# handle user input
 	if 'new' in args or 'update' in args:
-		if   'goal' in args:
-			table_name = 'goals'
-			data = Goal(cln_field_names[0]).get_data()
-		elif 'bill' in args:
-			table_name = 'bills'
-			data = Bill(cln_field_names[1]).get_data()
-		elif 'debt' in args:
-			table_name = 'debts'
-			data = Debt(cln_field_names[2]).get_data()
-		elif 'profile' in args:
-			table_name = 'profiles'
-			data = Profile(cln_field_names[3]).get_data()
+		table_name = ui.get_table_name(args)	# extract table name form input args
+		
+		if 'profile' not in table_name:
+			# shallow check to ensure the user's cmd can be executed without issue
+			if 'new' in args:
+				if budget_db.check_data(table_name, 'title', args[2]):		# user must specify the 'title' field when creating
+																			# a new db entry. Consider finding an alternative 
+																			# interface that pulls in a form and checks everything
+																			# at one time.
+					print "Cannot create new %s, '%s': It already exists." % (args[1], args[2])
+					sys.exit()
+			elif 'update' in args:
+				if not budget_db.check_data(table_name, 'title', args[2]):
+					print "Cannot update %s, '%s': It does not exist." % (args[1], args[2])
+					sys.exit()
+		
+		data = ui.prompt_user(args, cln_field_names)	# prompt user for data
 			
 		if 'new' in args:
 			budget_db.insert_data(table_name, data)

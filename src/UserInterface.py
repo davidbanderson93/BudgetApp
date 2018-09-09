@@ -2,6 +2,22 @@ from datetime import datetime
 
 dt_frmt = '%m-%d-%Y'	# used for converting user input date
 
+def get_table_name(args):
+	table_name = ''
+	if   'goal'    in args: table_name = 'goals'
+	elif 'bill'    in args: table_name = 'bills'
+	elif 'debt'    in args: table_name = 'debts'
+	elif 'profile' in args: table_name = 'profiles'
+	return table_name
+
+def prompt_user(args, cln_field_names):
+	data = {}
+	if   'goal'    in args: data = Goal(cln_field_names[0]).get_data()
+	elif 'bill'    in args: data = Bill(cln_field_names[1]).get_data()
+	elif 'debt'    in args: data = Debt(cln_field_names[2]).get_data()
+	elif 'profile' in args: data = Profile(cln_field_names[3]).get_data()
+	return data
+	
 class UserInput(object):
 	profile_id = ''
 	title = ''
