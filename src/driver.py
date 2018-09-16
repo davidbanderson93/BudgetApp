@@ -50,9 +50,9 @@ if __name__ == '__main__':
 	args = sys.argv[1:]
 	
 	print "usage: <cmd (new/update)> <table name> <goal/bill/debt title to update>"
-	
+	print "Running..."
 	#prepPath = CSVUtils.prepCSV(args[0])		# this is for actual exported formats from VWCU
-	#statement_data = CSVUtils.readCSV(args[0])	# eventually this will be automated to extract from
+	statement_data = CSVUtils.readCSV(args[0])	# eventually this will be automated to extract from
 												# the 'statements' directory
 												
 	# load categories from csv file
@@ -64,6 +64,8 @@ if __name__ == '__main__':
 	field_names = initialize_database(budget_db)		# create tables if do not exist
 	cln_field_names = clean_field_names(field_names)	# clean dictionaries but retain keys
 	#load_statement_data(budget_db, statement_data, 1, categories)	# load most recent statement data
+	
+	calc_category_tots(budget_db, categories)
 	
 	# handle user input
 	if 'new' in args or 'update' in args:
@@ -89,5 +91,8 @@ if __name__ == '__main__':
 			budget_db.insert_data(table_name, data)
 		elif 'update' in args:
 			budget_db.update_data(table_name, data, 'title', args[2])	# arg[2] is the title field of desired data
+	
+	if 'calc' in args and 'totals' in args:
+		calc_category_tots(budget_db, categories)
 	
 	budget_db.close_connection()

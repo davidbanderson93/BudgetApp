@@ -81,8 +81,8 @@ class Database(object):
 	#	table_name: string
 	#	col_name: variable name to sort selection
 	#	col_value: value to select by
-	def select_data(self, table_name, col_name, col_value):
-		sql_cmd = 'SELECT * FROM %s WHERE %s=?' % (table_name, col_name)
+	def select_data(self, table_name, col_name, col_value, select='*'):
+		sql_cmd = 'SELECT %s FROM %s WHERE %s=?' % (select, table_name, col_name)
 		cur = self.conn.cursor()
 		cur.execute(sql_cmd, (col_value,))
 		rows = cur.fetchall()

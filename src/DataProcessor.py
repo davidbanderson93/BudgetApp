@@ -1,3 +1,7 @@
+import os
+from time import time
+from datetime import datetime
+
 # match the memo info to category key words to determine category
 def determine_category(spending_entry, categories):
 	for row in categories:					# categories is a list of dictionaries
@@ -26,3 +30,29 @@ def load_statement_data(budget_db, statement_data, profile_id, categories):
 						'fees': entry[8], 'profile_id': profile_id,
 						'category': category}
 		budget_db.insert_data('spending', field_data)
+
+def calc_category_tots(budget_db, categories):
+	catKeys = categories[0].keys()
+	
+	# Calculate totals by category
+	spendingTotals = {}
+	for cat in catKeys:
+		spendingTotals[cat] = 0.
+		rows = budget_db.select_data('spending', 'category', cat, select='debit')
+		for row in rows:
+			spendingTotals[cat] += float(row[0])
+		# Convert to positive since the bank statement reports with negatives
+		if spendingTotals[cat] < 0.0:
+			spendingTotals[cat] *= -1
+	
+	# Generate spending report
+	ts = time()
+	reportTime = datetime.fromtimestamp(ts).strftime('%Y-%m-%d_%H-%M-%S')
+	reportDir = os.path.join('..', 'reports', reportTime + '.report')
+	f = open(reportDir, 'w')
+	for cat, total in spendingTotals.items():
+		s = "{}: ${}".format(cat, round(total, 2))
+		print s
+		f.write(s + '\n')
+	f.close()
+	
