@@ -97,8 +97,8 @@ class Database(object):
 	#	table_name: string
 	#	col_name: which column to check
 	#	col_value: which value to check
-	def check_data(self, table_name, col_name, col_value):
-		rows = self.select_data(table_name, col_name, col_value)
+	def check_data(self, table_name, col_name, col_value, select='*'):
+		rows = self.select_data(table_name, col_name, col_value, select=select)
 		if not rows:
 			return False
 		return True

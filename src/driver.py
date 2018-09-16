@@ -47,14 +47,7 @@ def clean_field_names(field_names):
 	
 # main of the driver
 if __name__ == '__main__':
-	args = sys.argv[1:]
 	
-	print "usage: <cmd (new/update)> <table name> <goal/bill/debt title to update>"
-	print "Running..."
-	#prepPath = CSVUtils.prepCSV(args[0])		# this is for actual exported formats from VWCU
-	statement_data = CSVUtils.readCSV(args[0])	# eventually this will be automated to extract from
-												# the 'statements' directory
-												
 	# load categories from csv file
 	categories = CSVUtils.readCSV('..\categories\categories.csv', dict_output=True)
 	
@@ -62,10 +55,38 @@ if __name__ == '__main__':
 	budget_db = Database('..\databases\Budget.db')
 	
 	field_names = initialize_database(budget_db)		# create tables if do not exist
-	cln_field_names = clean_field_names(field_names)	# clean dictionaries but retain keys
-	#load_statement_data(budget_db, statement_data, 1, categories)	# load most recent statement data
+	cln_field_names = clean_field_names(field_names)	# cleans dictionaries but retain keys
 	
-	calc_category_tots(budget_db, categories)
+	# Get cmd line args
+	args = sys.argv[1:]
+	
+	if 'help' in args:
+		print '''
+	Command                Description
+	---------------------------------------------------------------------
+	load                   Add a path to a statement to load into the db
+	new                    Creates a new table db entry
+	update                 Updates a current db entry
+	calc total             Generates a spending report for all time
+	
+	
+	Usage Examples:
+	----------------------------------------------------------------------
+	driver.py load ..\statements\<statement_name.csv>
+	driver.py new bill "title of bill"
+	driver.py update bill "title of bill"
+	driver.py calc total
+
+	'''
+		sys.exit()
+	
+	print "Running..."
+	
+	if 'load' in args:
+		#prepPath = CSVUtils.prepCSV(args[0])		# this is for actual exported formats from VWCU
+		statement_data = CSVUtils.readCSV(args[1])	# eventually this will be automated to extract from
+													# the 'statements' directory
+		load_statement_data(budget_db, statement_data, 1, categories)	# load most recent statement data
 	
 	# handle user input
 	if 'new' in args or 'update' in args:
@@ -81,7 +102,7 @@ if __name__ == '__main__':
 					print "Cannot create new %s, '%s': It already exists." % (args[1], args[2])
 					sys.exit()
 			elif 'update' in args:
-				if not budget_db.check_data(table_name, 'title', args[2]):
+				if not budget_db.check_data(table_name, 'title', args[2], select='title'):
 					print "Cannot update %s, '%s': It does not exist." % (args[1], args[2])
 					sys.exit()
 		
