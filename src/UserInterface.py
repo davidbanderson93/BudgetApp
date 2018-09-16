@@ -1,7 +1,21 @@
 from datetime import datetime
 
-dt_frmt = '%m-%d-%Y'	# used for converting user input date
+DT_FRMT = '%m/%d/%Y'	# used for converting user input date
 
+def get_date_range():
+	start_date = raw_input('From Date (m/d/yyyy): ')
+	end_date   = raw_input('  To Date (m/d/yyyy): ')
+	if start_date == '' and end_date == '':		# no range
+		return {}
+	elif start_date != '' and end_date == '':	# start to present
+		date_range = {'range': [datetime.strptime(start_date, DT_FRMT), datetime.now()]}
+		return date_range
+	elif start_date == '' and end_date != '':	# beginning of time to end
+		date_range = {'range_special': ['', datetime.strptime(end_date, DT_FRMT)]}
+		return date_range
+	else:										# standard start to end range
+		date_range = {'range': [datetime.strptime(start_date, DT_FRMT), datetime.strptime(end_date, DT_FRMT)]}
+		
 def get_table_name(args):
 	table_name = ''
 	if   'goal'    in args: table_name = 'goals'
@@ -64,11 +78,11 @@ class Goal(UserInput):
 	def __init__(self, goals_field_names):
 		super(Goal, self).__init__()
 		self.cost       = raw_input('Cost: ')
-		self.achieve_by = raw_input('Achieve By (m-d-yyyy): ')
+		self.achieve_by = raw_input('Achieve By (m/d/yyyy): ')
 		self.achieved	= raw_input('Achieved (1 or 0): ')
 		
 		if self.achieve_by != '':
-			self.achieve_by = str(datetime.strptime(self.achieve_by, dt_frmt).date())
+			self.achieve_by = str(datetime.strptime(self.achieve_by, DT_FRMT).date())
 		
 		goals_field_names['profile_id']  = self.profile_id
 		goals_field_names['title']       = self.title
@@ -112,12 +126,12 @@ class Debt(UserInput):
 		self.payment       = raw_input('Payment: ')
 		self.total_debt    = raw_input('Total Debt: ')
 		self.interest_rate = raw_input('Interest Rate (%): ')
-		self.achieve_by    = raw_input('Achieve By (m-d-yyyy): ')
+		self.achieve_by    = raw_input('Achieve By (m/d/yyyy): ')
 		self.due_date      = raw_input('Due Date (every month): ')
 		self.achieved	   = raw_input('Achieved (1 or 0): ')
 		
 		if self.achieve_by != '':
-			self.achieve_by = str(datetime.strptime(self.achieve_by, dt_frmt).date())
+			self.achieve_by = str(datetime.strptime(self.achieve_by, DT_FRMT).date())
 		
 		debts_field_names['profile_id']    = self.profile_id
 		debts_field_names['title']         = self.title

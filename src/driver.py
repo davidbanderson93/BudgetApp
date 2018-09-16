@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import sys
+from datetime import datetime
 import CSVUtils
 import UserInterface as ui
 from DatabaseManager import Database
@@ -114,6 +115,6 @@ if __name__ == '__main__':
 			budget_db.update_data(table_name, data, 'title', args[2])	# arg[2] is the title field of desired data
 	
 	if 'calc' in args and 'totals' in args:
-		calc_category_tots(budget_db, categories)
+		calc_category_tots(budget_db, categories, date_range=ui.get_date_range())
 	
 	budget_db.close_connection()
