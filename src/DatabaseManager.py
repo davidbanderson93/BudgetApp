@@ -102,3 +102,10 @@ class Database(object):
 		if not rows:
 			return False
 		return True
+		
+	def check_row(self, table_name, field_data):
+		for name, value in field_data.items():
+			if not self.check_data(table_name, name, value):
+				return True	# returns true if any of the column values are found
+		return False	# returns false if none of the data is found
+			

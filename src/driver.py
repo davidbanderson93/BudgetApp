@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+ #!/usr/bin/env python
 import sys
 from datetime import datetime
 import CSVUtils
@@ -68,7 +68,7 @@ if __name__ == '__main__':
 	load                   Add a path to a statement to load into the db
 	new                    Creates a new table db entry
 	update                 Updates a current db entry
-	calc total             Generates a spending report for all time
+	calc totals            Generates a spending report for all time
 	
 	
 	Usage Examples:
@@ -76,7 +76,7 @@ if __name__ == '__main__':
 	driver.py load ..\statements\<statement_name.csv>
 	driver.py new bill "title of bill"
 	driver.py update bill "title of bill"
-	driver.py calc total
+	driver.py calc totals
 
 	'''
 		sys.exit()
@@ -84,8 +84,9 @@ if __name__ == '__main__':
 	print "Running..."
 	
 	if 'load' in args:
-		#prepPath = CSVUtils.prepCSV(args[0])		# this is for actual exported formats from VWCU
-		statement_data = CSVUtils.readCSV(args[1])	# eventually this will be automated to extract from
+		#prepPath = CSVUtils.prepCSV(args[1])		# this is for actual exported formats from VWCU
+		prepPath = args[1]	#temporary assignment
+		statement_data = CSVUtils.readCSV(prepPath)	# eventually this will be automated to extract from
 													# the 'statements' directory
 		load_statement_data(budget_db, statement_data, 1, categories)	# load most recent statement data
 	

@@ -31,7 +31,8 @@ def load_statement_data(budget_db, statement_data, profile_id, categories):
 						'balance': entry[6], 'check_number': entry[7],
 						'fees': entry[8], 'profile_id': profile_id,
 						'category': category}
-		budget_db.insert_data('spending', field_data)
+		if not budget_db.check_data('spending', 'transaction_number', field_data['transaction_number']):
+			budget_db.insert_data('spending', field_data)
 		
 # date_range: [start_date, end_data]
 def calc_category_tots(budget_db, categories, date_range={}):

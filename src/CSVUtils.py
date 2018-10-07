@@ -18,7 +18,7 @@ def prepCSV(csvPath):
 		f.write(line)
 	f.close()
 	os.remove(csvPath)	# remove original file to make room for next exported statement
-	return prepPath
+	return newPath
 
 def readCSV(csvPath, dict_output=False):
 	content = []
