@@ -84,11 +84,14 @@ if __name__ == '__main__':
 	print "Running..."
 	
 	if 'load' in args:
-		#prepPath = CSVUtils.prepCSV(args[1])		# this is for actual exported formats from VWCU
-		prepPath = args[1]	#temporary assignment
-		statement_data = CSVUtils.readCSV(prepPath)	# eventually this will be automated to extract from
-													# the 'statements' directory
-		load_statement_data(budget_db, statement_data, 1, categories)	# load most recent statement data
+
+		#prepPath = args[1]	#temporary assignment
+		path = os.path.join('..', 'statements')
+		for file in os.listdir(path):
+			if file.endswith('.csv') and 'export' in file.lower():	# statement file name must have the word 'export' in it when exported
+				prepPath = CSVUtils.prepCSV(os.path.join(path, file))		# this is for actual exported formats from VWCU
+				statement_data = CSVUtils.readCSV(prepPath)
+				load_statement_data(budget_db, statement_data, 1, categories)	# load any exported statements
 	
 	# handle user input
 	if 'new' in args or 'update' in args:
