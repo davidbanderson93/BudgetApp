@@ -119,6 +119,6 @@ if __name__ == '__main__':
 			budget_db.update_data(table_name, data, 'title', args[2])	# arg[2] is the title field of desired data
 	
 	if 'calc' in args and 'totals' in args:
-		calc_category_tots(budget_db, categories, date_range=ui.get_date_range())
-	
+		spendingTotals = calc_category_tots(budget_db, categories, date_range=ui.get_date_range())
+		generate_spending_report(spendingTotals)
 	budget_db.close_connection()

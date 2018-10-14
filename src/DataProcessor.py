@@ -1,6 +1,8 @@
 import os
 from time import time
 from datetime import datetime
+import matplotlib.pyplot as plt
+from collections import defaultdict
 
 DT_FRMT = '%m/%d/%Y'	# used for converting user input date
 
@@ -35,37 +37,51 @@ def load_statement_data(budget_db, statement_data, profile_id, categories):
 			budget_db.insert_data('spending', field_data)
 		
 # date_range: [start_date, end_data]
+# output is a defaultdict with value of list of dicts of date, amount entries for that category
 def calc_category_tots(budget_db, categories, date_range={}):
 	catKeys = categories[0].keys()
 	
 	# Calculate totals by category
-	spendingTotals = {}
+	spendingTotals = defaultdict(list)
 	for cat in catKeys:
-		spendingTotals[cat] = 0.
 		rows = budget_db.select_data('spending', 'category', cat, select='debit, date')
 		for row in rows:
 			rowDate = datetime.strptime(row[1], DT_FRMT)	# get date from the current row in the db
 			if date_range:	# test if optional date range is present
 				if date_range.keys()[0] == 'range_special':			# only care about the end date
 					if rowDate <= date_range['range_special'][1]:	# choose the end date to compare to from the dict list
-						spendingTotals[cat] += float(row[0])					
+						dollarAmount = float(row[0])					
 				else:
 					if date_range['range'][0] <= rowDate <= date_range['range'][1]:	# standard start end range
-						spendingTotals[cat] += float(row[0])
+						dollarAmount = float(row[0])
 			else:	# if no range, then do a full statement range calculation
-				spendingTotals[cat] += float(row[0])
-		# Convert to positive since the bank statement reports with negatives
-		if spendingTotals[cat] < 0.0:
-			spendingTotals[cat] *= -1
+				dollarAmount = float(row[0])
+			if dollarAmount < 0.0:	# Convert to positive since the bank statement reports with negatives
+				dollarAmount *= -1
+			spendingTotals[cat].append({'date': rowDate, 'amount': dollarAmount})
+	return spendingTotals
 	
+def generate_spending_report(spendingTotals):
 	# Generate spending report
 	ts = time()
 	reportTime = datetime.fromtimestamp(ts).strftime('%Y-%m-%d_%H-%M-%S')
-	reportDir = os.path.join('..', 'reports', reportTime + '.report')
-	f = open(reportDir, 'w')
-	for cat, total in spendingTotals.items():
-		s = "{}: ${}".format(cat, round(total, 2))
-		print s
-		f.write(s + '\n')
-	f.close()
+	reportDir = os.path.join('..', 'reports', 'report_%s' % reportTime)
+	if not os.path.isdir(reportDir):
+		os.mkdir(reportDir)
+	graphsDir = os.path.join(reportDir, 'graphs')
+	if not os.path.isdir(graphsDir):
+		os.mkdir(graphsDir)
+	for cat, data in sorted(spendingTotals.items()):
+		filename = os.path.join(graphsDir, cat.replace(' ', '_') + '.pdf')
+		dates = []
+		amounts = []
+		for entry in data:
+			dates.append(entry['date'])
+			amounts.append(entry['amount'])
+		plt.plot(dates, amounts)
+		plt.savefig(filename)
+		
+	
+
+
 	
