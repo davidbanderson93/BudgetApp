@@ -48,12 +48,11 @@ def clean_field_names(field_names):
 	
 # main of the driver
 if __name__ == '__main__':
-	
 	# load categories from csv file
-	categories = CSVUtils.readCSV('..\categories\categories.csv', dict_output=True)
+	categories = CSVUtils.readCSV('../categories/categories.csv', dict_output=True)
 	
 	# connect to the budget_db (or create it if does not exist)
-	budget_db = Database('..\databases\Budget.db')
+	budget_db = Database('../databases/Budget.db')
 	
 	field_names = initialize_database(budget_db)		# create tables if do not exist
 	cln_field_names = clean_field_names(field_names)	# cleans dictionaries but retain keys
