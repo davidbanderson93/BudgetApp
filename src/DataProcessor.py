@@ -61,8 +61,8 @@ def calc_category_tots(budget_db, categories, date_range={}):
 						dollarAmount = float(row[0])
 			else:	# if no range, then do a full statement range calculation
 				dollarAmount = float(row[0])
-			if dollarAmount < 0.0:	# Convert to positive since the bank statement reports with negatives
-				dollarAmount *= -1
+			#if dollarAmount < 0.0:	# Convert to positive since the bank statement reports with negatives
+			dollarAmount *= -1	# Changed to multiply by -1 all the time since we want to negate account credits
 				
 			spendingTotals[cat].append({'date': rowDate, 'amount': dollarAmount})
 	return spendingTotals
