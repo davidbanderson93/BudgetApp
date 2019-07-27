@@ -65,11 +65,6 @@ def calc_category_tots(budget_db, categories, date_range={}):
 				dollarAmount *= -1
 				
 			spendingTotals[cat].append({'date': rowDate, 'amount': dollarAmount})
-				
-	for key, val in spendingTotals.items():
-		for v in val:
-			print v
-	raw_input()
 	return spendingTotals
 	
 def generate_spending_report(spendingTotals):
